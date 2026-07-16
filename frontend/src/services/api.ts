@@ -4,8 +4,10 @@ import axios from 'axios';
 export const TOKEN_KEY = 'ofos_access_token';
 export const REFRESH_TOKEN_KEY = 'ofos_refresh_token';
 
+const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/api/v1';
+
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api/v1',
+  baseURL: apiBaseUrl,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -40,7 +42,7 @@ api.interceptors.response.use(
         }
 
         // Try to get a new token
-        const response = await axios.post('http://localhost:8080/api/v1/auth/refresh', {
+        const response = await axios.post(`${apiBaseUrl}/auth/refresh`, {
           refreshToken,
         });
 
