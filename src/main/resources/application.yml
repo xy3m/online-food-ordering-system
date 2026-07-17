@@ -36,6 +36,19 @@ spring:
     serialization:
       write-dates-as-timestamps: false
 
+  # Mail Configuration
+  mail:
+    host: ${SMTP_HOST:smtp.gmail.com}
+    port: ${SMTP_PORT:587}
+    username: ${SMTP_USERNAME:your_email@gmail.com}
+    password: ${SMTP_PASSWORD:your_app_password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 # ==============================================================
 # JWT Configuration
 # ==============================================================
