@@ -22,4 +22,4 @@ COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-Xmx180m", "-Xms64m", "-Xss256k", "-XX:MaxMetaspaceSize=80m", "-XX:+UseSerialGC", "-XX:+ExitOnOutOfMemoryError", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Xmx140m", "-Xms64m", "-Xss256k", "-XX:MaxMetaspaceSize=160m", "-XX:ReservedCodeCacheSize=32m", "-XX:+UseSerialGC", "-XX:+ExitOnOutOfMemoryError", "-jar", "app.jar"]
