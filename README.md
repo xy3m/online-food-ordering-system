@@ -1,5 +1,7 @@
 # Online Food Ordering System (OFOS)
 
+🌐 **Live Demo:** [https://online-food-ordering-system-eight.vercel.app/](https://online-food-ordering-system-eight.vercel.app/)
+
 A production-ready, industry-grade Online Food Ordering System built with a robust **Java 21 / Spring Boot** backend and a premium **React 18 / Tailwind CSS** frontend.
 
 ## 🌟 Key Features
