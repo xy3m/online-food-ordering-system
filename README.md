@@ -19,27 +19,22 @@ A production-ready, industry-grade Online Food Ordering System built with a robu
 
 ## 📸 Screenshots
 
-<details>
-<summary>Click to view screenshots</summary>
-
-![Screenshot](./screenshots/Screenshot%202026-07-17%20161137.png)
-![Screenshot](./screenshots/Screenshot%202026-07-17%20161220.png)
-![Screenshot](./screenshots/Screenshot%202026-07-17%20161237.png)
-![Screenshot](./screenshots/Screenshot%202026-07-17%20161300.png)
-![Screenshot](./screenshots/Screenshot%202026-07-17%20165830.png)
-![Screenshot](./screenshots/Screenshot%202026-07-17%20171241.png)
-![Screenshot](./screenshots/Screenshot%202026-07-17%20171704.png)
-![Screenshot](./screenshots/Screenshot%202026-07-17%20171749.png)
-![Screenshot](./screenshots/Screenshot%202026-07-17%20173003.png)
-![Screenshot](./screenshots/Screenshot%202026-07-17%20174259.png)
-![Screenshot](./screenshots/Screenshot%202026-07-17%20175737.png)
-![Screenshot](./screenshots/Screenshot%202026-07-17%20175748.png)
-![Screenshot](./screenshots/Screenshot%202026-07-17%20175802.png)
-![Screenshot](./screenshots/Screenshot%202026-07-17%20175825.png)
-![Screenshot](./screenshots/Screenshot%202026-07-17%20175839.png)
-![Screenshot](./screenshots/Screenshot%202026-07-17%20175849.png)
-
-</details>
+<img src="screenshots/Screenshot 2026-07-17 161137.png" width="800">
+<img src="screenshots/Screenshot 2026-07-17 161220.png" width="800">
+<img src="screenshots/Screenshot 2026-07-17 161237.png" width="800">
+<img src="screenshots/Screenshot 2026-07-17 161300.png" width="800">
+<img src="screenshots/Screenshot 2026-07-17 165830.png" width="800">
+<img src="screenshots/Screenshot 2026-07-17 171241.png" width="800">
+<img src="screenshots/Screenshot 2026-07-17 171704.png" width="800">
+<img src="screenshots/Screenshot 2026-07-17 171749.png" width="800">
+<img src="screenshots/Screenshot 2026-07-17 173003.png" width="800">
+<img src="screenshots/Screenshot 2026-07-17 174259.png" width="800">
+<img src="screenshots/Screenshot 2026-07-17 175737.png" width="800">
+<img src="screenshots/Screenshot 2026-07-17 175748.png" width="800">
+<img src="screenshots/Screenshot 2026-07-17 175802.png" width="800">
+<img src="screenshots/Screenshot 2026-07-17 175825.png" width="800">
+<img src="screenshots/Screenshot 2026-07-17 175839.png" width="800">
+<img src="screenshots/Screenshot 2026-07-17 175849.png" width="800">
 
 ## 🏗️ Tech Stack
 
