@@ -8,6 +8,12 @@ server:
     include-message: always
     include-binding-errors: always
     include-stacktrace: never
+  tomcat:
+    threads:
+      max: 15
+      min-spare: 2
+    accept-count: 20
+    connection-timeout: 20000
 
 spring:
   application:
