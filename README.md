@@ -17,6 +17,30 @@ A production-ready, industry-grade Online Food Ordering System built with a robu
 - **Robust Order Management**: Dynamic Menu Categories, Restaurant Operating Hours (Open/Closed), and automated Email Notifications (Order Confirmations & Status Updates).
 - **Premium Frontend Aesthetics**: Built with Vite, React, Tailwind CSS (Dark Mode default), and Framer Motion for buttery-smooth glassmorphism UI interactions.
 
+## 📸 Screenshots
+
+<details>
+<summary>Click to view screenshots</summary>
+
+![Screenshot](./screenshots/Screenshot%202026-07-17%20161137.png)
+![Screenshot](./screenshots/Screenshot%202026-07-17%20161220.png)
+![Screenshot](./screenshots/Screenshot%202026-07-17%20161237.png)
+![Screenshot](./screenshots/Screenshot%202026-07-17%20161300.png)
+![Screenshot](./screenshots/Screenshot%202026-07-17%20165830.png)
+![Screenshot](./screenshots/Screenshot%202026-07-17%20171241.png)
+![Screenshot](./screenshots/Screenshot%202026-07-17%20171704.png)
+![Screenshot](./screenshots/Screenshot%202026-07-17%20171749.png)
+![Screenshot](./screenshots/Screenshot%202026-07-17%20173003.png)
+![Screenshot](./screenshots/Screenshot%202026-07-17%20174259.png)
+![Screenshot](./screenshots/Screenshot%202026-07-17%20175737.png)
+![Screenshot](./screenshots/Screenshot%202026-07-17%20175748.png)
+![Screenshot](./screenshots/Screenshot%202026-07-17%20175802.png)
+![Screenshot](./screenshots/Screenshot%202026-07-17%20175825.png)
+![Screenshot](./screenshots/Screenshot%202026-07-17%20175839.png)
+![Screenshot](./screenshots/Screenshot%202026-07-17%20175849.png)
+
+</details>
+
 ## 🏗️ Tech Stack
 
 ### Backend
