@@ -24,11 +24,9 @@ A production-ready, industry-grade Online Food Ordering System built with a robu
 <img src="Screenshots/Screenshot 2026-07-17 161237.png" width="800">
 <img src="Screenshots/Screenshot 2026-07-17 161300.png" width="800">
 <img src="Screenshots/Screenshot 2026-07-17 165830.png" width="800">
-<img src="Screenshots/Screenshot 2026-07-17 171241.png" width="800">
+
 <img src="Screenshots/Screenshot 2026-07-17 171704.png" width="800">
-<img src="Screenshots/Screenshot 2026-07-17 171749.png" width="800">
-<img src="Screenshots/Screenshot 2026-07-17 173003.png" width="800">
-<img src="Screenshots/Screenshot 2026-07-17 174259.png" width="800">
+
 <img src="Screenshots/Screenshot 2026-07-17 175737.png" width="800">
 <img src="Screenshots/Screenshot 2026-07-17 175748.png" width="800">
 <img src="Screenshots/Screenshot 2026-07-17 175802.png" width="800">
