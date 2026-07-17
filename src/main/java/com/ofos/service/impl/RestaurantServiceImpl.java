@@ -165,6 +165,16 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     // ==================== Mapper (manual — avoids MapStruct complexity for now) ====================
 
+    @Override
+    @Transactional(readOnly = true)
+    public RestaurantResponse getRestaurantByOwnerId(Long ownerId) {
+        List<Restaurant> owned = restaurantRepository.findByOwnerId(ownerId);
+        if (owned.isEmpty()) {
+            throw new ResourceNotFoundException("Restaurant", "ownerId", ownerId);
+        }
+        return toResponse(owned.get(0), null);
+    }
+
     private RestaurantResponse toResponse(Restaurant restaurant, Double distance) {
         return RestaurantResponse.builder()
                 .id(restaurant.getId())

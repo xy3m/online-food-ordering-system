@@ -19,10 +19,12 @@ const MenuManagement = ({ restaurantId }) => {
   });
 
   useEffect(() => {
+    if (!restaurantId) return;
     fetchMenu();
   }, [restaurantId]);
 
   const fetchMenu = async () => {
+    if (!restaurantId) return;
     try {
       setLoading(true);
       const res = await api.get(`/restaurants/${restaurantId}/menu?size=100`);

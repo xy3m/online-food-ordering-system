@@ -59,10 +59,10 @@ const StaffDashboard = () => {
     let interval;
     const initializeStaff = async () => {
       try {
-        if (!user || !user.userId) return;
+        if (!user) return;
 
-        const res = await api.get('/restaurants?size=100');
-        const myRestaurant = res.data.data.content.find(r => r.ownerId === user.userId);
+        const res = await api.get('/restaurant-staff/my-restaurant');
+        const myRestaurant = res.data.data;
 
         if (myRestaurant) {
           setRestaurantId(myRestaurant.id);
@@ -80,9 +80,6 @@ const StaffDashboard = () => {
           });
           await fetchOrders(myRestaurant.id);
           interval = setInterval(() => fetchOrders(myRestaurant.id), 15000);
-        } else {
-          setLoading(false);
-          console.warn("No restaurant found for this staff member");
         }
       } catch (err) {
         console.error("Failed to initialize staff dashboard", err);

@@ -18,4 +18,6 @@ public interface RestaurantService {
     RestaurantResponse createRestaurant(RestaurantRequest request);
 
     RestaurantResponse updateRestaurant(Long id, RestaurantRequest request, Long currentUserId);
+
+    RestaurantResponse getRestaurantByOwnerId(Long ownerId);
 }
