@@ -100,8 +100,27 @@ export const AuthProvider = ({ children }) => {
     });
   };
 
+  const switchDemoRole = (role: 'ADMIN' | 'RESTAURANT_STAFF' | 'CUSTOMER') => {
+    const demoEmail = role === 'ADMIN' ? 'admin@ofos.com' : role === 'RESTAURANT_STAFF' ? 'karim@kacchihouse.com' : 'tanvir@gmail.com';
+    const fallbackUser = {
+      userId: role === 'ADMIN' ? 1 : role === 'RESTAURANT_STAFF' ? 2 : 3,
+      id: role === 'ADMIN' ? 1 : role === 'RESTAURANT_STAFF' ? 2 : 3,
+      fullName: role === 'ADMIN' ? 'System Administrator' : role === 'RESTAURANT_STAFF' ? 'Karim Uddin (Kacchi House)' : 'Tanvir Hasan (Foodie)',
+      email: demoEmail,
+      phone: '+880 1711-000001',
+      role: role,
+      latitude: 23.7500,
+      longitude: 90.3800
+    };
+    localStorage.setItem(TOKEN_KEY, 'demo_jwt_access_token_v1');
+    localStorage.setItem(REFRESH_TOKEN_KEY, 'demo_jwt_refresh_token_v1');
+    localStorage.setItem('ofos_user', JSON.stringify(fallbackUser));
+    setUser(fallbackUser);
+    return fallbackUser;
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, updateLocation }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, updateLocation, switchDemoRole }}>
       {children}
     </AuthContext.Provider>
   );

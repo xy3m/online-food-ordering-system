@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext';
 import { Utensils, ShoppingCart, User as UserIcon, LogOut, LayoutDashboard, ChevronDown, ListOrdered, Search, Heart } from 'lucide-react';
 
 const Navbar = ({ onCartClick }: { onCartClick: () => void }) => {
-  const { user, logout } = useAuth();
+  const { user, logout, switchDemoRole } = useAuth() as any;
   const { cart } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
@@ -35,21 +35,9 @@ const Navbar = ({ onCartClick }: { onCartClick: () => void }) => {
   ];
 
   const handleSwitchRole = (role: 'ADMIN' | 'RESTAURANT_STAFF' | 'CUSTOMER') => {
-    const demoEmail = role === 'ADMIN' ? 'admin@ofos.com' : role === 'RESTAURANT_STAFF' ? 'karim@kacchihouse.com' : 'tanvir@gmail.com';
-    const fallbackUser = {
-      userId: role === 'ADMIN' ? 1 : role === 'RESTAURANT_STAFF' ? 2 : 3,
-      id: role === 'ADMIN' ? 1 : role === 'RESTAURANT_STAFF' ? 2 : 3,
-      fullName: role === 'ADMIN' ? 'System Administrator' : role === 'RESTAURANT_STAFF' ? 'Karim Uddin (Kacchi House)' : 'Tanvir Hasan (Foodie)',
-      email: demoEmail,
-      phone: '+880 1711-000001',
-      role: role,
-      latitude: 23.7500,
-      longitude: 90.3800
-    };
-    localStorage.setItem('ofos_access_token', 'demo_jwt_access_token_v1');
-    localStorage.setItem('ofos_refresh_token', 'demo_jwt_refresh_token_v1');
-    localStorage.setItem('ofos_user', JSON.stringify(fallbackUser));
-
+    if (switchDemoRole) {
+      switchDemoRole(role);
+    }
     if (role === 'ADMIN') {
       navigate('/admin');
     } else if (role === 'RESTAURANT_STAFF') {
@@ -57,7 +45,6 @@ const Navbar = ({ onCartClick }: { onCartClick: () => void }) => {
     } else {
       navigate('/restaurants');
     }
-    window.location.reload();
   };
 
   return (
