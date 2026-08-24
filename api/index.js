@@ -371,17 +371,93 @@ router.get('/admin/restaurants', (req, res) => {
   });
 });
 
-router.patch('/admin/restaurants/:id/approve', (req, res) => {
-  const rId = parseInt(req.params.id);
-  const rest = dynamicRestaurants.find(r => r.id === rId);
-  if (rest) {
-    rest.active = true;
-  }
+router.get('/admin/transactions', (req, res) => {
+  const transactionsList = [
+    { paymentId: 1, transactionRef: 'BK-89X24A09', orderId: 1001, customerName: 'Tanvir Hasan', restaurantName: 'Kacchi House', paymentMethod: 'bKash', amount: 980, createdAt: new Date(Date.now() - 25 * 60000).toISOString() },
+    { paymentId: 2, transactionRef: 'TXN-9988214', orderId: 1002, customerName: 'Tanvir Hasan', restaurantName: 'Chillox Gourmet', paymentMethod: 'Credit Card', amount: 580, createdAt: new Date(Date.now() - 10 * 60000).toISOString() },
+    { paymentId: 3, transactionRef: 'COD-OFFLINE', orderId: 1003, customerName: 'Tanvir Hasan', restaurantName: 'Pizza Hut Express', paymentMethod: 'Cash On Delivery', amount: 1130, createdAt: new Date(Date.now() - 2 * 86400000).toISOString() },
+    { paymentId: 4, transactionRef: 'BK-55T990A1', orderId: 1004, customerName: 'Ayesha Siddiqua', restaurantName: 'Kacchi House', paymentMethod: 'bKash', amount: 1470, createdAt: new Date(Date.now() - 2 * 60000).toISOString() }
+  ];
   res.json({
     success: true,
-    message: 'Restaurant Approved & Activated',
-    data: rest
+    data: {
+      content: transactionsList,
+      totalPages: 1,
+      totalElements: transactionsList.length
+    }
   });
+});
+
+let DEMO_APPLICATIONS = [
+  { id: 1, userName: 'Karim Uddin', restaurantName: 'Kacchi House', address: 'House 42, Road 7/A, Dhanmondi, Dhaka', phone: '+880 1812-345678', businessLicenseUrl: '', status: 'APPROVED', createdAt: '2026-08-20T10:00:00Z' },
+  { id: 2, userName: 'Chef Gordon', restaurantName: 'Smoky Grill & BBQ', address: 'Sector 11, Uttara, Dhaka', phone: '+880 1799-887766', businessLicenseUrl: '', status: 'PENDING', createdAt: '2026-08-23T14:30:00Z' },
+  { id: 3, userName: 'Nusrat Jahan', restaurantName: 'Sweet Treat Bakery', address: 'Banani Block C, Dhaka', phone: '+880 1611-223344', businessLicenseUrl: '', status: 'PENDING', createdAt: '2026-08-24T09:15:00Z' }
+];
+
+router.get('/applications', (req, res) => {
+  res.json({
+    success: true,
+    data: {
+      content: DEMO_APPLICATIONS,
+      totalPages: 1,
+      totalElements: DEMO_APPLICATIONS.length
+    }
+  });
+});
+
+router.post('/applications/:id/approve', (req, res) => {
+  const appId = parseInt(req.params.id);
+  const app = DEMO_APPLICATIONS.find(a => a.id === appId);
+  if (app) app.status = 'APPROVED';
+  res.json({ success: true, message: 'Application Approved', data: app });
+});
+
+router.post('/applications/:id/reject', (req, res) => {
+  const appId = parseInt(req.params.id);
+  const app = DEMO_APPLICATIONS.find(a => a.id === appId);
+  if (app) app.status = 'REJECTED';
+  res.json({ success: true, message: 'Application Rejected', data: app });
+});
+
+let DEMO_COUPONS = [
+  { id: 1, code: 'EID2026', discountPercentage: 20, active: true, expiryDate: '2026-12-31T23:59:59' },
+  { id: 2, code: 'WELCOME50', discountPercentage: 15, active: true, expiryDate: '2026-12-31T23:59:59' }
+];
+
+router.get('/coupons', (req, res) => {
+  res.json({
+    success: true,
+    data: {
+      content: DEMO_COUPONS,
+      totalPages: 1,
+      totalElements: DEMO_COUPONS.length
+    }
+  });
+});
+
+router.post('/coupons', (req, res) => {
+  const newC = {
+    id: DEMO_COUPONS.length + 1,
+    code: req.body.code || 'SPECIAL10',
+    discountPercentage: req.body.discountPercentage || 10,
+    active: true,
+    expiryDate: req.body.expiryDate || '2026-12-31T23:59:59'
+  };
+  DEMO_COUPONS.unshift(newC);
+  res.json({ success: true, data: newC });
+});
+
+router.patch('/coupons/:id/toggle', (req, res) => {
+  const cId = parseInt(req.params.id);
+  const c = DEMO_COUPONS.find(item => item.id === cId);
+  if (c) c.active = !c.active;
+  res.json({ success: true, data: c });
+});
+
+router.delete('/coupons/:id', (req, res) => {
+  const cId = parseInt(req.params.id);
+  DEMO_COUPONS = DEMO_COUPONS.filter(item => item.id !== cId);
+  res.json({ success: true, message: 'Coupon deleted' });
 });
 
 // 8. Staff Routes

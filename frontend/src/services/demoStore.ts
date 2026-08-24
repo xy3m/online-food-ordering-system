@@ -5,6 +5,9 @@ export interface DemoStoreData {
   restaurants: Restaurant[];
   menuItems: MenuItem[];
   orders: Order[];
+  transactions: any[];
+  applications: any[];
+  coupons: any[];
   metrics: {
     totalRevenue: number;
     totalOrders: number;
@@ -124,7 +127,6 @@ const INITIAL_DEMO_DATA: DemoStoreData = {
     }
   ],
   menuItems: [
-    // Kacchi House
     {
       id: 101,
       restaurantId: 1,
@@ -175,7 +177,6 @@ const INITIAL_DEMO_DATA: DemoStoreData = {
       imageUrl: 'https://images.unsplash.com/photo-1579954115545-a95591f28bfc?w=600&q=80',
       available: true
     },
-    // Sultan's Dine
     {
       id: 201,
       restaurantId: 2,
@@ -186,7 +187,6 @@ const INITIAL_DEMO_DATA: DemoStoreData = {
       imageUrl: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=600&q=80',
       available: true
     },
-    // Pizza Hut Express
     {
       id: 301,
       restaurantId: 3,
@@ -207,7 +207,6 @@ const INITIAL_DEMO_DATA: DemoStoreData = {
       imageUrl: 'https://images.unsplash.com/photo-1619535860434-ba1d8fa12536?w=600&q=80',
       available: true
     },
-    // Burger King & Chillox
     {
       id: 401,
       restaurantId: 4,
@@ -331,6 +330,21 @@ const INITIAL_DEMO_DATA: DemoStoreData = {
       updatedAt: new Date(Date.now() - 2 * 60000).toISOString()
     }
   ],
+  transactions: [
+    { paymentId: 1, transactionRef: 'BK-89X24A09', orderId: 1001, customerName: 'Tanvir Hasan', restaurantName: 'Kacchi House', paymentMethod: 'bKash', amount: 980, createdAt: new Date(Date.now() - 25 * 60000).toISOString() },
+    { paymentId: 2, transactionRef: 'TXN-9988214', orderId: 1002, customerName: 'Tanvir Hasan', restaurantName: 'Chillox Gourmet', paymentMethod: 'Credit Card', amount: 580, createdAt: new Date(Date.now() - 10 * 60000).toISOString() },
+    { paymentId: 3, transactionRef: 'COD-OFFLINE', orderId: 1003, customerName: 'Tanvir Hasan', restaurantName: 'Pizza Hut Express', paymentMethod: 'Cash On Delivery', amount: 1130, createdAt: new Date(Date.now() - 2 * 86400000).toISOString() },
+    { paymentId: 4, transactionRef: 'BK-55T990A1', orderId: 1004, customerName: 'Ayesha Siddiqua', restaurantName: 'Kacchi House', paymentMethod: 'bKash', amount: 1470, createdAt: new Date(Date.now() - 2 * 60000).toISOString() }
+  ],
+  applications: [
+    { id: 1, userName: 'Karim Uddin', restaurantName: 'Kacchi House', address: 'House 42, Road 7/A, Dhanmondi, Dhaka', phone: '+880 1812-345678', businessLicenseUrl: '', status: 'APPROVED', createdAt: '2026-08-20T10:00:00Z' },
+    { id: 2, userName: 'Chef Gordon', restaurantName: 'Smoky Grill & BBQ', address: 'Sector 11, Uttara, Dhaka', phone: '+880 1799-887766', businessLicenseUrl: '', status: 'PENDING', createdAt: '2026-08-23T14:30:00Z' },
+    { id: 3, userName: 'Nusrat Jahan', restaurantName: 'Sweet Treat Bakery', address: 'Banani Block C, Dhaka', phone: '+880 1611-223344', businessLicenseUrl: '', status: 'PENDING', createdAt: '2026-08-24T09:15:00Z' }
+  ],
+  coupons: [
+    { id: 1, code: 'EID2026', discountPercentage: 20, active: true, expiryDate: '2026-12-31T23:59:59' },
+    { id: 2, code: 'WELCOME50', discountPercentage: 15, active: true, expiryDate: '2026-12-31T23:59:59' }
+  ],
   metrics: {
     totalRevenue: 284500,
     totalOrders: 1420,
@@ -340,7 +354,7 @@ const INITIAL_DEMO_DATA: DemoStoreData = {
   }
 };
 
-const STORAGE_KEY = 'ofos_demo_store_v1';
+const STORAGE_KEY = 'ofos_demo_store_v2';
 
 export const getDemoStore = (): DemoStoreData => {
   try {
