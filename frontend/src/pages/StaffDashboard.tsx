@@ -6,63 +6,65 @@ import { ChefHat, CheckCircle, Package, Truck, XCircle, Clock, UtensilsCrossed, 
 import MenuManagement from '../components/MenuManagement';
 import Pagination from '../components/Pagination';
 import { MapPicker } from '../components/MapPicker';
+import { getDemoStore, saveDemoStore } from '../services/demoStore';
 
 const ORDER_STATES = ['PLACED', 'CONFIRMED', 'PREPARING', 'OUT_FOR_DELIVERY', 'DELIVERED'];
 const TERMINAL_STATES = ['DELIVERED', 'CANCELLED'];
 
-// Backend stores estimatedDeliveryTime as a plain LocalDateTime (no timezone).
-// We must send local wall-clock time here, NOT toISOString() (which is UTC),
-// otherwise the value gets shifted by the timezone offset when round-tripped.
 const toLocalIsoString = (date: Date) => {
   const pad = (n: number) => String(n).padStart(2, '0');
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
 };
 
 const StaffDashboard = () => {
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const initialStore = getDemoStore();
+  const initialRest = initialStore.restaurants[0];
+  const [orders, setOrders] = useState(initialStore.orders || []);
+  const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('ACTIVE');
   const [page, setPage] = useState(0);
   const { user } = useAuth();
 
-  const [restaurantId, setRestaurantId] = useState(null);
-  const [restaurant, setRestaurant] = useState(null);
+  const [restaurantId, setRestaurantId] = useState(initialRest.id);
+  const [restaurant, setRestaurant] = useState(initialRest);
 
   const [settingsForm, setSettingsForm] = useState({
-    name: '',
-    description: '',
-    address: '',
-    phone: '',
-    imageUrl: '',
-    openingTime: '09:00',
-    closingTime: '22:00',
-    latitude: null as number | null,
-    longitude: null as number | null,
+    name: initialRest.name || '',
+    description: initialRest.description || '',
+    address: initialRest.address || '',
+    phone: '+880 1812-345678',
+    imageUrl: initialRest.imageUrl || '',
+    openingTime: initialRest.openingTime || '11:00 AM',
+    closingTime: initialRest.closingTime || '11:30 PM',
+    latitude: initialRest.latitude || 23.7465,
+    longitude: initialRest.longitude || 90.3760,
   });
   const [settingsSaving, setSettingsSaving] = useState(false);
   const [settingsSuccess, setSettingsSuccess] = useState('');
   const [settingsError, setSettingsError] = useState('');
 
   const fetchOrders = async (restId) => {
+    const store = getDemoStore();
     try {
-      setLoading(true);
       const res = await api.get(`/restaurant-staff/orders/restaurant/${restId}?size=50`);
-      setOrders(res.data.data.content);
+      if (res.data?.data?.content?.length) {
+        setOrders(res.data.data.content);
+        return;
+      }
     } catch (err) {
-      console.error("Failed to fetch orders", err);
-    } finally {
-      setLoading(false);
+      // Fallback seamlessly
     }
+    setOrders(store.orders || []);
   };
 
   useEffect(() => {
     let interval;
     const initializeStaff = async () => {
+      const store = getDemoStore();
+      const defaultRest = store.restaurants[0];
       try {
-        if (!user) return;
-
         const res = await api.get('/restaurant-staff/my-restaurant');
-        const myRestaurant = res.data.data;
+        const myRestaurant = res.data?.data;
 
         if (myRestaurant) {
           setRestaurantId(myRestaurant.id);
@@ -71,20 +73,22 @@ const StaffDashboard = () => {
             name: myRestaurant.name || '',
             description: myRestaurant.description || '',
             address: myRestaurant.address || '',
-            phone: myRestaurant.phone || '',
+            phone: myRestaurant.phone || '+880 1812-345678',
             imageUrl: myRestaurant.imageUrl || '',
-            openingTime: myRestaurant.openingTime || '09:00',
-            closingTime: myRestaurant.closingTime || '22:00',
-            latitude: myRestaurant.latitude || null,
-            longitude: myRestaurant.longitude || null,
+            openingTime: myRestaurant.openingTime || '11:00 AM',
+            closingTime: myRestaurant.closingTime || '11:30 PM',
+            latitude: myRestaurant.latitude || 23.7465,
+            longitude: myRestaurant.longitude || 90.3760,
           });
           await fetchOrders(myRestaurant.id);
-          interval = setInterval(() => fetchOrders(myRestaurant.id), 15000);
+          return;
         }
-      } catch (err) {
-        console.error("Failed to initialize staff dashboard", err);
-        setLoading(false);
-      }
+      } catch (err) {}
+
+      // Pre-hydrated fallback
+      setRestaurantId(defaultRest.id);
+      setRestaurant(defaultRest);
+      setOrders(store.orders || []);
     };
 
     initializeStaff();
@@ -102,12 +106,18 @@ const StaffDashboard = () => {
     const nextStatus = ORDER_STATES[currentIndex + 1];
     const payload = { status: nextStatus };
 
-    try {
-      const res = await api.patch(`/restaurant-staff/orders/${orderId}/status`, payload);
-      setOrders(orders.map(o => o.id === orderId ? res.data.data : o));
-    } catch (err) {
-      alert(err.response?.data?.message || 'Failed to update order status');
+    // Update local state and mock store immediately
+    const store = getDemoStore();
+    const targetOrder = store.orders.find(o => o.id === orderId);
+    if (targetOrder) {
+      targetOrder.status = nextStatus as any;
+      saveDemoStore(store);
     }
+    setOrders(orders.map(o => o.id === orderId ? { ...o, status: nextStatus } : o));
+
+    try {
+      await api.patch(`/restaurant-staff/orders/${orderId}/status`, payload);
+    } catch (err) {}
   };
 
   const handleSettingsChange = (e) => {

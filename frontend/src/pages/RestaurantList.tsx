@@ -5,25 +5,27 @@ import { Star, MapPin, Search, Clock, Navigation, ChevronLeft, ChevronRight } fr
 import api from '../services/api';
 import { Restaurant } from '../types';
 import { useAuth } from '../hooks/useAuth';
+import { getDemoStore } from '../services/demoStore';
 
 const ITEMS_PER_PAGE = 10;
 
 const RestaurantList = () => {
   const { user } = useAuth();
-  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
-  const [loading, setLoading] = useState(true);
+  const initialStore = getDemoStore();
+  const [restaurants, setRestaurants] = useState<Restaurant[]>(initialStore.restaurants || []);
+  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('rating');
-  const [favorites, setFavorites] = useState<Set<number>>(new Set());
+  const [favorites, setFavorites] = useState<Set<number>>(new Set([1, 2]));
   const [page, setPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
-  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(initialStore.restaurants.length);
 
   const hasLocation = !!(user?.latitude && user?.longitude);
 
   useEffect(() => {
     fetchRestaurants();
-    if (localStorage.getItem('ofos_token')) {
+    if (localStorage.getItem('ofos_access_token')) {
       fetchFavorites();
     }
   }, [user, page]); // Re-fetch if user (and location) changes or page changes
@@ -34,6 +36,7 @@ const RestaurantList = () => {
   }, [searchTerm]);
 
   const fetchRestaurants = async () => {
+    const store = getDemoStore();
     try {
       setLoading(true);
       let url = `/restaurants?page=${page}&size=${ITEMS_PER_PAGE}`;
@@ -45,12 +48,21 @@ const RestaurantList = () => {
       }
       const response = await api.get(url);
       const data = response.data.data;
-      setRestaurants(data.content || []);
-      setTotalPages(data.totalPages || 0);
-      setTotalItems(data.totalElements || 0);
+      if (data?.content?.length) {
+        setRestaurants(data.content);
+        setTotalPages(data.totalPages || 1);
+        setTotalItems(data.totalElements || data.content.length);
+        return;
+      }
     } catch (error) {
-      console.error('Failed to fetch restaurants:', error);
+      // Fallback
     } finally {
+      let filtered = store.restaurants || [];
+      if (searchTerm.trim()) {
+        filtered = filtered.filter(r => r.name.toLowerCase().includes(searchTerm.toLowerCase()) || r.description?.toLowerCase().includes(searchTerm.toLowerCase()));
+      }
+      setRestaurants(filtered);
+      setTotalItems(filtered.length);
       setLoading(false);
     }
   };

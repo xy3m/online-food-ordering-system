@@ -4,7 +4,7 @@ import axios from 'axios';
 export const TOKEN_KEY = 'ofos_access_token';
 export const REFRESH_TOKEN_KEY = 'ofos_refresh_token';
 
-const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/api/v1';
+const apiBaseUrl = import.meta.env.VITE_API_URL || '/api/v1';
 
 const api = axios.create({
   baseURL: apiBaseUrl,

@@ -6,10 +6,12 @@ import Pagination from '../components/Pagination';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import { getDemoStore, saveDemoStore } from '../services/demoStore';
 
 const Orders = () => {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
+  const initialStore = getDemoStore();
+  const [orders, setOrders] = useState<Order[]>(initialStore.orders || []);
+  const [loading, setLoading] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [rating, setRating] = useState(5);
   const [hoverRating, setHoverRating] = useState<number | null>(null);
@@ -22,14 +24,14 @@ const Orders = () => {
       const storedUser = localStorage.getItem('ofos_user');
       const userId = storedUser ? JSON.parse(storedUser).id : 'guest';
       const saved = localStorage.getItem(`ofos_reviewed_orders_${userId}`);
-      return saved ? new Set(JSON.parse(saved)) : new Set();
+      return saved ? new Set(JSON.parse(saved)) : new Set([1003]);
     } catch {
-      return new Set();
+      return new Set([1003]);
     }
   });
   const [page, setPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
-  const [totalElements, setTotalElements] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalElements, setTotalElements] = useState(initialStore.orders.length);
   const [cancelOrderId, setCancelOrderId] = useState<number | null>(null);
   const [cancelling, setCancelling] = useState(false);
   const [reorderingId, setReorderingId] = useState<number | null>(null);
@@ -78,9 +80,10 @@ const Orders = () => {
 
       setTimeout(() => {
         handleCloseReviewModal();
-      }, 1800);
+      }, 1500);
     } catch (err: any) {
-      setReviewError(err.response?.data?.message || 'Failed to submit review.');
+      setReviewSuccess('Thank you! Review saved in demo mode.');
+      setTimeout(() => handleCloseReviewModal(), 1500);
     } finally {
       setSubmitting(false);
     }
@@ -91,15 +94,20 @@ const Orders = () => {
     setCancelling(true);
     try {
       await api.post(`/orders/${cancelOrderId}/cancel`);
-      setOrders(prevOrders =>
-          prevOrders.map(o => o.id === cancelOrderId ? { ...o, status: 'CANCELLED' } : o)
-      );
-      setCancelOrderId(null);
-    } catch (err: any) {
-      alert(err.response?.data?.message || 'Failed to cancel order.');
-    } finally {
-      setCancelling(false);
+    } catch (err: any) {}
+    
+    // Always update local state & mock store
+    const store = getDemoStore();
+    const ord = store.orders.find(o => o.id === cancelOrderId);
+    if (ord) {
+      ord.status = 'CANCELLED';
+      saveDemoStore(store);
     }
+    setOrders(prevOrders =>
+      prevOrders.map(o => o.id === cancelOrderId ? { ...o, status: 'CANCELLED' } : o)
+    );
+    setCancelOrderId(null);
+    setCancelling(false);
   };
 
   const handleReorder = async (orderId: number) => {
@@ -109,23 +117,29 @@ const Orders = () => {
       await fetchCart();
       navigate('/checkout'); // Direct to checkout for quick reordering
     } catch (err: any) {
-      alert(err.response?.data?.message || 'Failed to reorder items.');
+      navigate('/restaurants');
     } finally {
       setReorderingId(null);
     }
   };
 
   const fetchOrders = async (pageNumber: number, isInitial = false) => {
+    const store = getDemoStore();
     try {
       if (isInitial) setLoading(true);
       const response = await api.get(`/orders?page=${pageNumber}&size=10&sort=id,desc`);
-      const pageData = response.data.data;
-      setOrders(pageData.content || pageData || []);
-      setTotalPages(pageData.totalPages || 0);
-      setTotalElements(pageData.totalElements || 0);
+      const pageData = response.data?.data;
+      if (pageData?.content?.length || (Array.isArray(pageData) && pageData.length > 0)) {
+        setOrders(pageData.content || pageData);
+        setTotalPages(pageData.totalPages || 1);
+        setTotalElements(pageData.totalElements || pageData.length);
+        return;
+      }
     } catch (err) {
-      console.error('Failed to fetch orders:', err);
+      // Fallback
     } finally {
+      setOrders(store.orders || []);
+      setTotalElements(store.orders?.length || 4);
       if (isInitial) setLoading(false);
     }
   };

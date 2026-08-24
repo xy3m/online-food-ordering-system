@@ -1,0 +1,23 @@
+{
+  "name": "online-food-ordering-system",
+  "version": "2.0.0",
+  "description": "OFOS - Industry-Grade Multi-Role Online Food Ordering System with Live Kitchen Dispatch, GPS Tracking & Automated Order Lifecycle",
+  "main": "api/index.js",
+  "scripts": {
+    "dev": "node api/index.js",
+    "server": "node api/index.js",
+    "client": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "vercel-build": "npm --prefix frontend install && npm --prefix frontend run build"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.0"
+  },
+  "author": "xy3m",
+  "license": "ISC"
+}

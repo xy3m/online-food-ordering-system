@@ -34,19 +34,94 @@ const Navbar = ({ onCartClick }: { onCartClick: () => void }) => {
     { name: 'Contact', path: '/contact' },
   ];
 
+  const handleSwitchRole = (role: 'ADMIN' | 'RESTAURANT_STAFF' | 'CUSTOMER') => {
+    const demoEmail = role === 'ADMIN' ? 'admin@ofos.com' : role === 'RESTAURANT_STAFF' ? 'karim@kacchihouse.com' : 'tanvir@gmail.com';
+    const fallbackUser = {
+      userId: role === 'ADMIN' ? 1 : role === 'RESTAURANT_STAFF' ? 2 : 3,
+      id: role === 'ADMIN' ? 1 : role === 'RESTAURANT_STAFF' ? 2 : 3,
+      fullName: role === 'ADMIN' ? 'System Administrator' : role === 'RESTAURANT_STAFF' ? 'Karim Uddin (Kacchi House)' : 'Tanvir Hasan (Foodie)',
+      email: demoEmail,
+      phone: '+880 1711-000001',
+      role: role,
+      latitude: 23.7500,
+      longitude: 90.3800
+    };
+    localStorage.setItem('ofos_access_token', 'demo_jwt_access_token_v1');
+    localStorage.setItem('ofos_refresh_token', 'demo_jwt_refresh_token_v1');
+    localStorage.setItem('ofos_user', JSON.stringify(fallbackUser));
+
+    if (role === 'ADMIN') {
+      navigate('/admin');
+    } else if (role === 'RESTAURANT_STAFF') {
+      navigate('/staff');
+    } else {
+      navigate('/restaurants');
+    }
+    window.location.reload();
+  };
+
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-dark/80 backdrop-blur-md shadow-lg py-3' : 'bg-transparent py-5'}`}>
-      <div className="container mx-auto px-6 md:px-12 flex items-center justify-between">
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-dark/95 backdrop-blur-md shadow-2xl py-2.5 border-b border-white/10' : 'bg-dark/80 backdrop-blur-sm py-4'}`}>
+      <div className="container mx-auto px-4 md:px-10 flex items-center justify-between gap-2">
         
         {/* Logo */}
-        <Link to="/" className="flex items-center space-x-2 text-white hover:text-white transition-colors group">
-          <span className="text-3xl font-serif font-bold tracking-tight text-white flex items-center">
+        <Link to="/" className="flex items-center space-x-2 text-white hover:text-white transition-colors group shrink-0">
+          <span className="text-2xl sm:text-3xl font-serif font-bold tracking-tight text-white flex items-center">
             F<span className="text-primary-500">oo</span>dy
+            <span className="ml-1.5 px-1.5 py-0.5 text-[10px] font-mono font-bold bg-primary-500/20 text-primary-400 border border-primary-500/40 rounded">
+              LMS.PRO
+            </span>
           </span>
         </Link>
 
+        {/* 1-CLICK DEMO ROLE SWITCHER */}
+        <div className="flex items-center gap-1 bg-black/60 p-1 rounded-xl border border-white/10 overflow-x-auto shadow-inner">
+          <span className="hidden lg:inline text-[10px] uppercase font-bold tracking-wider text-slate-400 px-2">
+            Demo Switcher:
+          </span>
+
+          <button
+            onClick={() => handleSwitchRole('ADMIN')}
+            className={`px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+              user?.role === 'ADMIN'
+                ? 'bg-purple-500/30 text-purple-200 border border-purple-400/50 shadow-sm'
+                : 'text-slate-400 hover:text-white hover:bg-white/5'
+            }`}
+            title="Switch to Admin Dashboard"
+          >
+            <span className="w-2 h-2 rounded-full bg-purple-400"></span>
+            <span>Admin</span>
+          </button>
+
+          <button
+            onClick={() => handleSwitchRole('RESTAURANT_STAFF')}
+            className={`px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+              user?.role === 'RESTAURANT_STAFF'
+                ? 'bg-emerald-500/30 text-emerald-200 border border-emerald-400/50 shadow-sm'
+                : 'text-slate-400 hover:text-white hover:bg-white/5'
+            }`}
+            title="Switch to Restaurant Kitchen Staff"
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span>Staff</span>
+          </button>
+
+          <button
+            onClick={() => handleSwitchRole('CUSTOMER')}
+            className={`px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+              user?.role === 'CUSTOMER'
+                ? 'bg-orange-500/30 text-orange-200 border border-orange-400/50 shadow-sm'
+                : 'text-slate-400 hover:text-white hover:bg-white/5'
+            }`}
+            title="Switch to Customer Foodie"
+          >
+            <span className="w-2 h-2 rounded-full bg-orange-400"></span>
+            <span>Customer</span>
+          </button>
+        </div>
+
         {/* Center Links (Desktop) */}
-        <div className="hidden md:flex items-center space-x-8">
+        <div className="hidden xl:flex items-center space-x-6">
           {!user || user.role === 'CUSTOMER' ? (
             navLinks.map((link) => (
               <Link 

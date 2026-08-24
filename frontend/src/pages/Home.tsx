@@ -28,11 +28,14 @@ const Home = () => {
           </p>
           
           <div className="flex flex-wrap items-center gap-4 pt-4">
+            <Link to="/login" className="px-6 py-3 rounded-xl bg-gradient-to-r from-primary-500 to-amber-500 hover:from-primary-400 hover:to-amber-400 text-white font-bold text-base flex items-center gap-2 shadow-lg shadow-primary-500/25 transition-all transform hover:-translate-y-0.5">
+              <span>⚡ 1-Click Live Demo</span>
+            </Link>
             <Link to="/restaurants" className="btn-primary flex items-center gap-2">
               View Menu
             </Link>
-            <button className="btn-outline">
-              <Apple className="w-5 h-5" /> Download For iOS
+            <button className="btn-outline hidden sm:flex items-center gap-2">
+              <Apple className="w-5 h-5" /> iOS App
             </button>
           </div>
 

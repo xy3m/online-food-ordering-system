@@ -6,16 +6,25 @@ import { useAuth } from '../hooks/useAuth';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Check, Search, AlertCircle, Star, Utensils } from 'lucide-react';
 import { Restaurant, MenuItem } from '../types';
+import { getDemoStore } from '../services/demoStore';
 
 const Menu = () => {
   const { id } = useParams<{ id: string }>();
-  const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const initialStore = getDemoStore();
+  const restId = parseInt(id || '1') || 1;
+  const defaultRest = initialStore.restaurants.find(r => r.id === restId) || initialStore.restaurants[0];
+  const defaultItems = initialStore.menuItems.filter(m => m.restaurantId === restId);
+
+  const [restaurant, setRestaurant] = useState<Restaurant | null>(defaultRest);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>(defaultItems.length ? defaultItems : initialStore.menuItems);
+  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [addingItem, setAddingItem] = useState<number | null>(null);
   const [error, setError] = useState('');
-  const [reviews, setReviews] = useState<any[]>([]);
+  const [reviews, setReviews] = useState<any[]>([
+    { id: 1, userName: 'Sadia Rahman', rating: 5, comment: 'Best Kacchi in Dhaka, fast delivery!', createdAt: '2 days ago' },
+    { id: 2, userName: 'Mehedi Hasan', rating: 5, comment: 'Food was hot and piping fresh.', createdAt: '1 week ago' }
+  ]);
   const [visibleCount, setVisibleCount] = useState(5);
   const categoryRefs = React.useRef<Record<string, HTMLDivElement | null>>({});
   
@@ -24,18 +33,23 @@ const Menu = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const store = getDemoStore();
+      const currentRestId = parseInt(id || '1') || 1;
       try {
         const [restRes, menuRes, reviewsRes] = await Promise.all([
           api.get(`/restaurants/${id}`),
           api.get(`/restaurants/${id}/menu?size=50`),
           api.get(`/reviews/restaurant/${id}`)
         ]);
-        setRestaurant(restRes.data.data);
-        setMenuItems(menuRes.data.data.content);
-        setReviews(reviewsRes.data.data || []);
+        if (restRes.data?.data) setRestaurant(restRes.data.data);
+        if (menuRes.data?.data?.content?.length) setMenuItems(menuRes.data.data.content);
+        if (reviewsRes.data?.data) setReviews(reviewsRes.data.data);
       } catch (err) {
-        console.error("Failed to fetch menu", err);
-        setError('Failed to load menu. Please try again.');
+        // Fallback
+        const fallbackRest = store.restaurants.find(r => r.id === currentRestId) || store.restaurants[0];
+        const fallbackItems = store.menuItems.filter(m => m.restaurantId === currentRestId);
+        setRestaurant(fallbackRest);
+        setMenuItems(fallbackItems.length ? fallbackItems : store.menuItems);
       } finally {
         setLoading(false);
       }
