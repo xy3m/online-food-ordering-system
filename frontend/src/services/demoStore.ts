@@ -354,7 +354,7 @@ const INITIAL_DEMO_DATA: DemoStoreData = {
   }
 };
 
-const STORAGE_KEY = 'ofos_demo_store_v2';
+const STORAGE_KEY = 'ofos_demo_store_v4';
 
 export const getDemoStore = (): DemoStoreData => {
   try {
@@ -363,7 +363,13 @@ export const getDemoStore = (): DemoStoreData => {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_DEMO_DATA));
       return INITIAL_DEMO_DATA;
     }
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    if (!parsed.transactions || !parsed.applications || !parsed.coupons || !parsed.users) {
+      const merged = { ...INITIAL_DEMO_DATA, ...parsed, transactions: INITIAL_DEMO_DATA.transactions, applications: INITIAL_DEMO_DATA.applications, coupons: INITIAL_DEMO_DATA.coupons };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+      return merged;
+    }
+    return parsed;
   } catch (e) {
     return INITIAL_DEMO_DATA;
   }

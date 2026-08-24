@@ -9,12 +9,9 @@ const AdminDashboard = () => {
   const initialStore = getDemoStore();
   const [activeTab, setActiveTab] = useState('USERS');
   const [users, setUsers] = useState(initialStore.users || []);
-  const [transactions, setTransactions] = useState(initialStore.orders || []);
-  const [applications, setApplications] = useState(initialStore.restaurants || []);
-  const [coupons, setCoupons] = useState([
-    { id: 1, code: 'EID2026', discountPercentage: 20, active: true, expiryDate: '2026-12-31' },
-    { id: 2, code: 'WELCOME50', discountPercentage: 15, active: true, expiryDate: '2026-12-31' }
-  ]);
+  const [transactions, setTransactions] = useState(initialStore.transactions || []);
+  const [applications, setApplications] = useState(initialStore.applications || []);
+  const [coupons, setCoupons] = useState(initialStore.coupons || []);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
